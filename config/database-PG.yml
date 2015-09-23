@@ -1,0 +1,11 @@
+development:
+  adapter: postgresql
+  database: edu_ol_development
+  pool: 5
+  timeout: 5000
+
+production:
+  adapter: postgresql
+  database: edu_ol_production
+  pool: 5
+  timeout: 5000

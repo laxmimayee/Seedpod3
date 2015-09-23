@@ -1,0 +1,7 @@
+<ul class="nav">
+  <% object.errors.full_messages.each do |message| %>
+    <li class="alert alert-danger">
+      <%= message %>
+    </li>
+  <% end %>
+</ul>

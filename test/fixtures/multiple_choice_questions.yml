@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  test_id: 1
+  description: MyText
+  option_1: MyString
+  option_2: MyString
+  option_3: MyString
+  option_4: MyString
+  answer: MyString
+
+two:
+  test_id: 1
+  description: MyText
+  option_1: MyString
+  option_2: MyString
+  option_3: MyString
+  option_4: MyString
+  answer: MyString

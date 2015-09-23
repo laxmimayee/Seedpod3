@@ -1,0 +1,30 @@
+<%= form_for @descriptive_question, :html => { :multipart => true, :class => "form-horizontal", :role => "form" } do |f| %>
+  <%= render "shared/error_messages", :object => f.object %>
+  <div class="row">
+    <div class="row">
+      <div class="col-md-4 col-sm-8">
+        <%= f.label :question, :class => 'col-sm-3 col-md-3 control-label' %>
+      </div>
+      <div class="col-md-4 col-sm-8">
+        <%= f.text_field :description, :class => 'form-control' %>
+      </div>
+    </div>
+    </br>
+    <div class="row">
+      <div class="col-md-4 col-sm-8">
+        <%= f.label :answer, :class => 'col-sm-3 col-md-3 control-label' %>
+      </div>
+      <div class="col-md-4 col-sm-8">
+        <%= f.text_area :answer, :class => 'form-control' %>
+      </div>
+    </div>
+  <div class="row">
+    <div class="col-md-4 col-sm-8 pull-right">
+      <%if @_controller.action_name == 'new'%>
+      <%= f.submit "Create Question", :class => 'btn btn-primary' %>
+      <%elsif @_controller.action_name == 'edit'%>
+      <%= f.submit "Update Question", :class => 'btn btn-primary' %>
+      <%end %>
+    </div>
+  </div>
+<% end %>

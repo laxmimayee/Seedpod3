@@ -1,0 +1,48 @@
+<div class="navbar navbar-inverse">
+  <div class="navbar-inner container-fluid">
+    <div class="col-sm-12">
+      <div class="navbar-header">
+        <div class="navbar-brand">
+          <%= link_to (image_tag "logo.jpg", :alt => "Logo Here", :height => "41px"), root_path %>
+        </div>
+      </div>
+      <ul class="nav navbar-nav">
+        <li>
+          <%= link_to "Home", root_path %>
+        </li>
+<!--         <li>
+          <%#= link_to "About", "#" %>
+        </li> -->
+        
+<!--         <li>
+          <%#= link_to "Contact", "#" %>
+        </li> -->
+        <% if current_user.present? %>
+         
+          <% if current_user.teacher? %>
+            <%= render "shared/teacher_side_bar" %>
+ 
+              <% else %>
+            <%= render "shared/student_side_bar" %>
+                <% end %>
+
+                 <li>
+            <%= link_to "View Profile", "#" %>
+          </li>
+
+          <li>
+            <%= link_to "Sign-Out", destroy_user_session_path, :data => {:method => :delete} %>
+          </li>
+         
+        <% else %>
+          <li>
+            <%= link_to "Sign-IN", new_user_session_path %>
+          </li>
+     <!--      <li>
+            <%#= link_to "Registration", new_user_registration_path %>
+          </li> -->
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
