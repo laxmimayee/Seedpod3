@@ -40,7 +40,7 @@ class DescriptiveQuestionsController < ApplicationController
   private
   
   def descriptive_question_params
-    params.require(:descriptive_question).permit(:description, :answer)
+    params.require(:descriptive_question).permit(:test_id, :description, :answer)
   end
 
   def set_descriptive_question

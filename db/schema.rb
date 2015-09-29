@@ -11,14 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150919212639) do
+ActiveRecord::Schema.define(version: 20150928163208) do
 
   create_table "descriptive_questions", force: :cascade do |t|
     t.integer  "test_id"
     t.text     "description"
     t.text     "answer"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.string   "question_type", default: "descriptive"
   end
 
   create_table "multiple_choice_questions", force: :cascade do |t|
@@ -29,8 +30,9 @@ ActiveRecord::Schema.define(version: 20150919212639) do
     t.string   "option_3"
     t.string   "option_4"
     t.string   "answer"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.string   "question_type", default: "multiple_choice"
   end
 
   create_table "tests", force: :cascade do |t|
