@@ -4,7 +4,7 @@
 
 <table class="table table-bordered table-hover">
   <tbody>
-    <% @tests.each_with_index do |test,index| %>
+    <% @completed_tests.each_with_index do |test,index| %>
     <tr>
       <td>
         <%= link_to test.test_name, test %>

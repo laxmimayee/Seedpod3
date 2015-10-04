@@ -19,7 +19,9 @@ seed_teachers
 =end
 
  user = User.create(:name => "Teacher", :role => "teacher", :email => "teacher@example.com" , :password => "hellohello"
-                  )                    
+                  )  
+user = User.create(:name => "Student", :role => "student", :email => "student@example.com" , :password => "hellohello"
+                   )                    
   #user.skip_confirmation!
   #user.save
   

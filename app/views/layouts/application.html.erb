@@ -18,8 +18,8 @@
             <section>
               <% flash.each do |key, value| %>
                 <div class="<%= flash_alert_class(key) %>" id="div">
-                  <button class="close" data={dismiss="alert"} type="button">
-                    &times;
+                  <button class="close" data={dismiss="alert"} type="button", "aria-hidden".to_sym="true" 
+                    &times;>
                   </button>
                   <%= raw value %>
                 </div>

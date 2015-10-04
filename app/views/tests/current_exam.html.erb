@@ -1,0 +1,64 @@
+<% if @student_test.present? %>
+<%= form_for @student_test, url: "/tests/submit_exam", :html => { :multipart => true, :class => "form-horizontal", :role => "form" } do |f| %>
+<%= render "shared/error_messages", :object => f.object %>
+<div class="page-header">
+  <h2><%= @test.test_name %></h2>
+</div>
+
+  <div class="row">
+    <%= f.fields_for :multiple_choice_questions do |question_fields| %>
+    <p>
+      <strong>Question:</strong>
+      <%= question_fields.object.description %>
+    </p>
+    <%= question_fields.hidden_field :id%>
+    <p>
+      <%= question_fields.radio_button :answer_caught, question_fields.object.option_1%>
+      <span>
+        <%= question_fields.object.option_1 %>
+      </span>
+    </p>
+    <p>
+      <%= question_fields.radio_button :answer_caught, question_fields.object.option_2 %>
+      <span>
+        <%= question_fields.object.option_2 %>
+      </span>
+    </p>
+    <p>
+      <%= question_fields.radio_button :answer_caught, question_fields.object.option_3 %>
+      <span>
+       <%= question_fields.object.option_3 %>
+      </span>
+    </p>
+    <p>
+      <%= question_fields.radio_button :answer_caught, question_fields.object.option_4 %>
+      <span>
+        <%= question_fields.object.option_4 %>
+      </span>
+    </p>
+    <hr>
+    <% end %>
+  </div>
+  <div class="row">
+    <%= f.fields_for :descriptive_questions do |d_question_fields| %>
+    <%= d_question_fields.hidden_field :id%>
+    <p>
+      <strong>Question:</strong>
+      <%= d_question_fields.object.description %>
+    </p>
+    <p>
+      <strong>Answer:</strong>
+      <%= d_question_fields.text_field :answer_caught %>
+    </p>
+    <hr>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-sm-8 pull-right">
+      <%= f.hidden_field :test_id%>
+      <%= f.hidden_field :user_id, :value => current_user.id%>
+      <%= f.submit "Submit Exam", :class => 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>
+<% end %>

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       get :complete_test
       get :completed_tests
       get :current_exam
+      post :submit_exam
     end
   end
   resources :multiple_choice_questions

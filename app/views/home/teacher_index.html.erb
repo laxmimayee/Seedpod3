@@ -15,9 +15,29 @@
       <td>
         <%= button_to "Deactivated", deactivate_test_tests_path, method: :get, params: {test_id: test.id}, :class => 'btn btn-large btn-warning'%>
       </td>
-<!--        <td>
+      <td>
         <%#= button_to "Complete", complete_test_tests_path, method: :get, params: {test_id: test.id}, data: {confirm: "Are you sure?"},:class => 'btn btn-large btn-info'%>
-      </td> -->
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<div class="page-header">
+  <h2>Completed Tests</h2>
+</div>
+
+<table class="table table-bordered table-hover">
+  <tbody>
+    <% @completed_tests.each_with_index do |completed_test,index| %>
+    <tr>
+      <td>
+        <%= link_to completed_test.test_name, completed_test %>
+      </td>
+      <td>
+        <%= button_to "Completed" , tests_path, :disabled => true, :class => 'btn btn-large btn-success'%>
+      </td>
     </tr>
     <% end %>
   </tbody>

@@ -1,0 +1,45 @@
+<% if current_user.present? %>
+<div class="page-header">
+  <h2>Current Exam</h2>
+</div>
+<% if @current_test_id.present? %>
+<div class="col-md-12">
+  <div class="col-md-3">
+    <button type="button" disabled="true" class='btn btn-large btn-info'><%= @current_test.test_name %></button>
+  </div>
+
+  <div class="col-md-3">
+    <%= button_to "Take" , current_exam_tests_path, :method => :get, :class => 'btn btn-large btn-info'%>
+  </div>
+</div>
+<% else %>
+<div class="col-md-12">
+  <button type="button" disabled="true" class='btn btn-large btn-warning'>Present No Exam Scheduled!</button>
+</div>
+<% end %>
+
+
+
+<div class="page-header">
+  <h2>Past Exams</h2>
+</div>
+  <% if @student_completed_tests.present? %>
+  <% @student_completed_tests.each_with_index do |student_completd_test,index| %>
+  <div class="col-md-12">
+    <div class="col-md-3">
+      <button type="button" disabled="true" class='btn btn-large btn-info'><%= student_completd_test.test.test_name%></button>
+    </div>
+
+    <div class="col-md-3">
+      <%= button_to "view Report" , test_path(student_completd_test.test.id), :method => :get, :class => 'btn btn-large btn-info'%>
+    </div>
+  </div>
+  <% end %>
+  <% else %>
+  <div class="col-md-12">
+    <button type="button" disabled="true" class='btn btn-large btn-warning'>There is No Completed Exams!</button>
+  </div>
+  <% end %>
+</div>
+
+<% end %>

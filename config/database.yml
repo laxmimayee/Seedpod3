@@ -17,19 +17,32 @@
 # development:
 #   adapter: mysql2
 #   encoding: utf8
-#   database: seedpod_development
+#   reconnect: false
+#   database: online_sep22-1_development #change database name as you want
+#   pool: 5
+#   username: root   #user name while you created mysql installation
+#   password:   #password which you have given during mysql installation
+#   host: localhost
+
+# test:
+#   adapter: mysql2
+#   encoding: utf8
+#   reconnect: false
+#   database: online_sep22-1_test
 #   pool: 5
 #   username: root
-#   password: gopi
+#   password: 
+#   host: localhost
 
 # production:
 #   adapter: mysql2
 #   encoding: utf8
-#   database: seedpod_production
+#   reconnect: false
+#   database: online_sep22-1_production
 #   pool: 5
 #   username: root
-#   password: gopi
-
+#   password: 
+#   host: localhost
 
 #==================
 # if you use sqllite then use this 
