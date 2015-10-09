@@ -2,9 +2,14 @@
   <h3>
     <%= link_to @test.test_name, @test %>
   </h3>
+  <% if current_user.student?%>
+  <h4>
+    Marks Obtained : <mark><%= get_student_test_result(@test.id) %></mark>
+  </h4>
+  <% end %>
 </div>
 
-<%if @test.status != "completed"  and current_user.teacher?%>
+<%if @test.status != "completed"  and current_user.teacher? and @test.is_it_report != "true"%>
 <div class="row">
   <div class="col-md-6 col-sm-6">
     <div class="form-group">
@@ -51,8 +56,18 @@
     <strong>Answer:</strong>
     <%= tq.answer %>
   </p>
+  <% if current_user.student?%>
+  <p>
+    <strong>Student Answer:</strong>
+    <%= get_student_answer(tq.id,tq.test_id,tq.question_type) %>
+  </p>
+  <p>
+    <strong>Result:</strong>
+    <%= get_student_result(tq.id,tq.test_id,tq.question_type) %>
+  </p>
+  <% end %>
 
-  <%if @test.status != "completed"  and current_user.teacher?%>
+  <%if @test.status != "completed"  and current_user.teacher? and @test.is_it_report != "true" %>
   <div class="col-md-6 col-sm-6 pull-right">
     <%= button_to "Edit Question", edit_multiple_choice_question_path(tq), method: :get, params: {page: params[:page]}, :class => 'btn btn-primary'%>
   </div>
@@ -66,7 +81,17 @@
     <strong>Answer:</strong>
     <%= tq.answer %>
   </p>
-  <%if @test.status != "completed" and current_user.teacher?%>
+  <% if current_user.student?%>
+  <p>
+    <strong>Student Answer:</strong>
+    <%= get_student_answer(tq.id,tq.test_id,tq.question_type) %>
+  </p>
+  <p>
+    <strong>Result:</strong>
+    <%= get_student_result(tq.id,tq.test_id,tq.question_type) %>
+  </p>
+  <% end %>
+  <%if @test.status != "completed" and current_user.teacher? and @test.is_it_report != "true"%>
   <div class="col-md-6 col-sm-6 pull-right">
     <%= button_to "Edit Question", edit_descriptive_question_path(tq), method: :get, params: {page: params[:page]}, :class => 'btn btn-primary'%>
   </div>

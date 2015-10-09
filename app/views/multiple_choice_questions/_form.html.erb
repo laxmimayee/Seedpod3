@@ -47,7 +47,10 @@
         <%= f.label :answer, :class => 'col-sm-3 col-md-3 control-label' %>
       </div>
       <div class="col-md-4 col-sm-8">
-        <%= f.text_field :answer, :class => 'form-control' %>
+        <%= f.radio_button :answer, 'option_1' %> Option 1
+        <%= f.radio_button :answer, 'option_2' %> Option 2
+        <%= f.radio_button :answer, 'option_3' %> Option 3
+        <%= f.radio_button :answer, 'option_4' %> Option 4
       </div>
     </div>
   <div class="row">

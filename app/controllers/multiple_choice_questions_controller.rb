@@ -8,6 +8,7 @@ class MultipleChoiceQuestionsController < ApplicationController
 
   def create
     params[:multiple_choice_question][:test_id] = @@test_id
+    params[:multiple_choice_question][:answer] = params[:multiple_choice_question][:"#{params[:multiple_choice_question][:answer]}"]   
     
     @multiple_choice_question = MultipleChoiceQuestion.create(multiple_choice_question_params)
     if @multiple_choice_question.errors.present?
@@ -15,7 +16,7 @@ class MultipleChoiceQuestionsController < ApplicationController
       render "new"
     else
       flash.now[:success] = I18n.t :success, :scope => [:multiple_choice_question, :create]
-    redirect_to  "/tests/#{@@test_id}"
+      redirect_to  "/tests/#{@@test_id}"
     end
   end
 
@@ -24,6 +25,8 @@ class MultipleChoiceQuestionsController < ApplicationController
   end
 
   def update
+    params[:multiple_choice_question][:answer] = params[:multiple_choice_question][:"#{params[:multiple_choice_question][:answer]}"]
+
     if @multiple_choice_question.update(multiple_choice_question_params)
       flash.now[:success] = I18n.t :success, :scope => [:multiple_choice_question, :update]
       if @@page != ""

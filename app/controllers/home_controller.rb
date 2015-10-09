@@ -4,9 +4,9 @@ class HomeController < ApplicationController
   def index
     if current_user.present?
       if current_user.teacher?
-        @tests = Test.where.not(status: "completed").order("created_at ASC")
-        @completed_tests = Test.where(status: "completed").order("created_at ASC")
-        # @completed_tests = Test.where(status: "completed").order("created_at ASC")
+        @tests = Test.all
+        @report_tests = StudentTest.select(:test_id).uniq
+        
         render "teacher_index"
       elsif current_user.student?
         @current_test_id = Test.find_by_status("activated")

@@ -9,34 +9,30 @@
       <td>
         <%= link_to test.test_name, test %>
       </td>
+      <% if test.status == "activated" %>
+      <td>
+        <%= button_to "Deactive", deactivate_test_tests_path, method: :get, params: {test_id: test.id}, :class => 'btn btn-large btn-warning'%>
+      </td>
+      <% elsif test.status == "deactivated" %>
       <td>
         <%= button_to "Activate", activate_test_tests_path, method: :get, params: {test_id: test.id}, :class => 'btn btn-large btn-primary'%>
       </td>
-      <td>
-        <%= button_to "Deactivated", deactivate_test_tests_path, method: :get, params: {test_id: test.id}, :class => 'btn btn-large btn-warning'%>
-      </td>
-      <td>
-        <%#= button_to "Complete", complete_test_tests_path, method: :get, params: {test_id: test.id}, data: {confirm: "Are you sure?"},:class => 'btn btn-large btn-info'%>
-      </td>
-    </tr>
-    <% end %>
+      <% end %>
+      <% end %>
   </tbody>
 </table>
 
 
 <div class="page-header">
-  <h2>Completed Tests</h2>
+  <h2>Reports</h2>
 </div>
 
 <table class="table table-bordered table-hover">
   <tbody>
-    <% @completed_tests.each_with_index do |completed_test,index| %>
+    <% @report_tests.each_with_index do |report_test,index| %>
     <tr>
       <td>
-        <%= link_to completed_test.test_name, completed_test %>
-      </td>
-      <td>
-        <%= button_to "Completed" , tests_path, :disabled => true, :class => 'btn btn-large btn-success'%>
+        <%= link_to report_test.test.test_name, "/tests/#{report_test.test_id}?is_it_report=true" %>
       </td>
     </tr>
     <% end %>
