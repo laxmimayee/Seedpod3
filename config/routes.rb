@@ -8,8 +8,6 @@ Rails.application.routes.draw do
     collection do
       get :activate_test
       get :deactivate_test
-      get :complete_test
-      get :completed_tests
       get :current_exam
       post :submit_exam
     end

@@ -32,7 +32,7 @@
     <% @report_tests.each_with_index do |report_test,index| %>
     <tr>
       <td>
-        <%= link_to report_test.test.test_name, "/tests/#{report_test.test_id}?is_it_report=true" %>
+        <%= link_to report_test.test.test_name, "/tests/#{report_test.test_id}?report=true" %>
       </td>
     </tr>
     <% end %>

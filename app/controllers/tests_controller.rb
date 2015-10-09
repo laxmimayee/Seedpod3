@@ -2,7 +2,6 @@ class TestsController < ApplicationController
   before_action :set_test, only: [:show, :edit, :update, :destroy]
 
   def index
-    @tests = Test.where.not(status: "completed").order("created_at ASC")
   end
 
   def new
@@ -23,17 +22,31 @@ class TestsController < ApplicationController
   end
 
   def show
-    if params[:is_it_report].present?
-      @test.is_it_report = "true"
-    end
     @multiple_choice_questions = MultipleChoiceQuestion.where(test_id: params[:id].to_i)
     @descriptive_questions = DescriptiveQuestion.where(test_id: params[:id].to_i)
     @total_questions = @multiple_choice_questions + @descriptive_questions
-
+    if params[:report].present?
+      @test.report = "true"      
+      @total_questions.each do |tq|
+        if tq.question_type == "multiple_choice"
+          tq.attempted_students_count = StudentAnswer.where(question_id: tq.id).count
+          tq.correct_attempted_students_count = StudentAnswer.where(question_id: tq.id, result: true).count
+          tq.wrong_attempted_students_count = StudentAnswer.where(question_id: tq.id, result: false).count
+          
+          tq.correct_attempted_students = StudentTest.where(id: StudentAnswer.where(question_id: tq.id, result: true).select(:student_test_id)).select(:user_id)
+          tq.wrong_attempted_students = StudentTest.where(id: StudentAnswer.where(question_id: tq.id, result: false).select(:student_test_id)).select(:user_id)
+        end
+        if tq.question_type == "descriptive"
+          tq.attempted_students_count = StudentAnswer.where(question_id: tq.id).count
+          tq.attempted_students =  StudentTest.where(id: StudentAnswer.where(question_id: tq.id).select(:student_test_id)).select(:user_id)
+        end
+      end
+    end
+    
     @total_questions.sort_by! {|u| u.created_at}
     @total_questions = @total_questions.paginate(page: params[:page], per_page:1)
   end
-
+  
   def activate_test
     if Test.find_by_status("activated")
       flash[:notice] = "Please Deactvate Activated Test"
@@ -58,19 +71,6 @@ class TestsController < ApplicationController
       flash[:notice] = "No Test Is Active"
     end
     redirect_to "/"
-  end
-
-  def complete_test
-    @test = Test.find(params[:test_id])
-    @test.status = "completed"
-    @test.save
-    flash[:notice] = "Test Moved To Ccompleted"
-    
-    redirect_to "/tests"
-  end
-
-  def completed_tests
-    @tests = Test.where(status: "completed").order("created_at ASC")
   end
 
   def current_exam
@@ -116,7 +116,7 @@ class TestsController < ApplicationController
     @student_test.status = "completed"
     student_report(@student_test)
 
-    redirect_to "/tests/current_exam"
+    redirect_to "/"
   end
 
   private
