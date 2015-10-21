@@ -29,17 +29,106 @@ class TestsController < ApplicationController
       @test.report = "true"      
       @total_questions.each do |tq|
         if tq.question_type == "multiple_choice"
-          tq.attempted_students_count = StudentAnswer.where(question_id: tq.id).count
-          tq.correct_attempted_students_count = StudentAnswer.where(question_id: tq.id, result: true).count
-          tq.wrong_attempted_students_count = StudentAnswer.where(question_id: tq.id, result: false).count
+          @answer = []
+          tq.attempted_students_count = StudentAnswer.where(question_id: tq.id, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).count
+          tq.correct_attempted_students_count = StudentAnswer.where(question_id: tq.id, result: true, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).count
+          tq.wrong_attempted_students_count = StudentAnswer.where(question_id: tq.id, result: false, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).count
           
-          tq.correct_attempted_students = StudentTest.where(id: StudentAnswer.where(question_id: tq.id, result: true).select(:student_test_id)).select(:user_id)
-          tq.wrong_attempted_students = StudentTest.where(id: StudentAnswer.where(question_id: tq.id, result: false).select(:student_test_id)).select(:user_id)
+          correct_attempted_students = StudentTest.where(id: StudentAnswer.where(question_id: tq.id, result: true, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:student_test_id)).select(:user_id)
+          correct_attempted_students_answers = StudentAnswer.where(question_id: tq.id, result: true, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:answer)
+          tq.correct_attempted_students_and_answers = correct_attempted_students.each_with_index.map  do |student,index|
+            correct_attempted_students_answers.each_with_index do |answer,index|
+              @answer[index] = answer.answer
+            end
+            {user_id: student.user_id, answer: @answer[index]}
+          end
+          
+          wrong_attempted_students = StudentTest.where(id: StudentAnswer.where(question_id: tq.id, result: false, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:student_test_id)).select(:user_id)
+          wrong_attempted_students_answers = StudentAnswer.where(question_id: tq.id, result: false, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:answer)
+          tq.wrong_attempted_students_and_answers = wrong_attempted_students.each_with_index.map  do |student,index|
+            wrong_attempted_students_answers.each_with_index do |answer,index|
+              @answer[index] = answer.answer
+            end
+            {user_id: student.user_id, answer: @answer[index]}
+          end
+
+          if tq.option_1 == tq.answer and tq.correct_attempted_students_count != 0
+            tq.option1_report = "#{tq.correct_attempted_students_count} Choose - Correct!"
+            tq.option1_class = "correct_option"
+          else
+            @option_1_wrong_count = 0
+            tq.wrong_attempted_students_and_answers.each do |temp|
+              if MultipleChoiceQuestion.where(id: tq.id, test_id: tq.test_id, option_1: temp[:answer]).present?
+                @option_1_wrong_count = @option_1_wrong_count+1
+              end
+            end 
+            if @option_1_wrong_count != 0
+              tq.option1_report = "#{@option_1_wrong_count} Choose - Incorrect!"
+              tq.option1_class = "incorrect_option"
+            end
+          end
+          
+          if tq.option_2 == tq.answer and tq.correct_attempted_students_count != 0
+            tq.option2_report = "#{tq.correct_attempted_students_count} Choose - Correct!"
+            tq.option2_class = "correct_option"
+          else 
+            @option_2_wrong_count = 0
+            tq.wrong_attempted_students_and_answers.each do |temp|
+              if MultipleChoiceQuestion.where(id: tq.id, test_id: tq.test_id, option_2: temp[:answer]).present?
+                @option_2_wrong_count = @option_2_wrong_count+1
+              end
+            end 
+            if @option_2_wrong_count != 0
+              tq.option2_report = "#{@option_2_wrong_count} Choose - Incorrect!"
+              tq.option2_class = "incorrect_option"
+            end
+          end
+          
+          if tq.option_3 == tq.answer and tq.correct_attempted_students_count != 0
+            tq.option3_report = "#{tq.correct_attempted_students_count} Choose - Correct!"
+            tq.option3_class = "correct_option"
+          else 
+            @option_3_wrong_count = 0
+            tq.wrong_attempted_students_and_answers.each do |temp|
+              if MultipleChoiceQuestion.where(id: tq.id, test_id: tq.test_id, option_3: temp[:answer]).present?
+                @option_3_wrong_count = @option_3_wrong_count+1
+              end
+            end 
+            if @option_3_wrong_count != 0
+              tq.option3_report = "#{@option_3_wrong_count} Choose - Incorrect!"
+              tq.option3_class = "incorrect_option"
+            end
+          end
+          
+          if tq.option_4 == tq.answer and tq.correct_attempted_students_count != 0
+            tq.option4_report = "#{tq.correct_attempted_students_count} Choose - Correct!"
+            tq.option4_class = "correct_option"
+          else 
+            @option_4_wrong_count = 0
+            tq.wrong_attempted_students_and_answers.each do |temp|
+              if MultipleChoiceQuestion.where(id: tq.id, test_id: tq.test_id, option_4: temp[:answer]).present?
+                @option_4_wrong_count = @option_4_wrong_count+1
+              end
+            end 
+            if @option_4_wrong_count != 0
+              tq.option4_report = "#{@option_4_wrong_count} Choose - Incorrect!"
+              tq.option4_class = "incorrect_option"
+            end
+          end
+          
         end
         if tq.question_type == "descriptive"
-          tq.attempted_students_count = StudentAnswer.where(question_id: tq.id).count
-          tq.attempted_students =  StudentTest.where(id: StudentAnswer.where(question_id: tq.id).select(:student_test_id)).select(:user_id)
+          tq.attempted_students_count = StudentAnswer.where(question_id: tq.id, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).count
+          attempted_students =  StudentTest.where(id: StudentAnswer.where(question_id: tq.id, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:student_test_id)).select(:user_id)
+          attempted_answers = StudentAnswer.where(question_id: tq.id, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:answer)          
+          tq.attempted_students_and_answers = attempted_students.each_with_index.map  do |student,index|
+            attempted_answers.each_with_index do |answer,index|
+              @answer[index] = answer.answer
+            end
+            {user_id: student.user_id, answer: @answer[index]}
+          end
         end
+
       end
     end
     

@@ -33,4 +33,7 @@ $( document ).ready(function() {
         $('#attempted_student').toggle();
     });
 
+    $('.correct_option').css({ 'color': 'green'});
+    $('.incorrect_option').css({ 'color': 'red'});    
+    
 });
