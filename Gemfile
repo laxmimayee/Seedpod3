@@ -52,3 +52,5 @@ gem 'will_paginate', '~> 3.0.7'
 gem 'bootstrap-will_paginate'
 gem 'devise'
 gem "cancancan"
+gem 'jquery-ui-rails'
+gem 'rails-jquery-autocomplete'

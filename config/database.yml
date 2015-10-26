@@ -54,17 +54,17 @@ default: &default
 
 development:
   <<: *default
-  database: db/development_tw.sqlite3
+  database: db/development_oct26.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: db/test_tw.sqlite3
+  database: db/test_oct26.sqlite3
 
 production:
   <<: *default
-  database: db/production_tw.sqlite3
+  database: db/production.sqlite3
 
 

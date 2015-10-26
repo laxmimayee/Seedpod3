@@ -10,6 +10,8 @@ Rails.application.routes.draw do
       get :deactivate_test
       get :current_exam
       post :submit_exam
+      get :autocomplete_student_name
+      get :search
     end
   end
   resources :multiple_choice_questions

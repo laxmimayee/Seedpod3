@@ -4,6 +4,24 @@ class TestsController < ApplicationController
   def index
   end
 
+  def autocomplete_student_name
+    term = params[:term]
+    students = User.where("lower(name) LIKE '%#{term}%'").order(:name)
+    render :json => students.map { |student| {:id => student.id, :label => "#{student.name}", :value => student.name} }
+  end
+
+  def search 
+    @student_response = StudentAnswer.where(question_type: "descriptive", question_id: params[:question_id], student_test_id: StudentTest.where(test_id: params[:test_id].to_i, user_id: params[:student_id]))
+
+    if @student_response.present?
+      @student_response = "#{User.find(params[:student_id]).name} "+"Response :  "+" #{@student_response[0][:answer]}"
+    else
+      @student_response ="#{User.find(params[:student_id]).name} "+" Didnt Attempted This Question"
+    end
+
+    redirect_to "/tests/#{params[:test_id]}?page=#{params[:page]}&report=true", :notice => @student_response
+  end
+
   def new
     @test = Test.new
   end
@@ -30,11 +48,11 @@ class TestsController < ApplicationController
       @total_questions.each do |tq|
         if tq.question_type == "multiple_choice"
           @answer = []
-          tq.attempted_students_count = StudentAnswer.where(question_id: tq.id, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).count
-          tq.correct_attempted_students_count = StudentAnswer.where(question_id: tq.id, result: true, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).count
-          tq.wrong_attempted_students_count = StudentAnswer.where(question_id: tq.id, result: false, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).count
+          tq.attempted_students_count = StudentTest.where(id: (StudentAnswer.where(question_id: tq.id, question_type: "multiple_choice").select(:student_test_id)), test_id: params[:id].to_i).count
+
           
-          correct_attempted_students = StudentTest.where(id: StudentAnswer.where(question_id: tq.id, result: true, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:student_test_id)).select(:user_id)
+          tq.correct_attempted_students_count = StudentTest.where(id: (StudentAnswer.where(question_id: tq.id, question_type: "multiple_choice", result: true).select(:student_test_id)), test_id: params[:id].to_i).count          
+          correct_attempted_students = StudentTest.where(id: (StudentAnswer.where(question_id: tq.id, question_type: "multiple_choice", result: true).select(:student_test_id)), test_id: params[:id].to_i).select(:user_id)
           correct_attempted_students_answers = StudentAnswer.where(question_id: tq.id, result: true, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:answer)
           tq.correct_attempted_students_and_answers = correct_attempted_students.each_with_index.map  do |student,index|
             correct_attempted_students_answers.each_with_index do |answer,index|
@@ -43,7 +61,10 @@ class TestsController < ApplicationController
             {user_id: student.user_id, answer: @answer[index]}
           end
           
-          wrong_attempted_students = StudentTest.where(id: StudentAnswer.where(question_id: tq.id, result: false, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:student_test_id)).select(:user_id)
+          tq.wrong_attempted_students_count = StudentTest.where(id: (StudentAnswer.where(question_id: tq.id, question_type: "multiple_choice", result: false).select(:student_test_id)), test_id: params[:id].to_i).count
+
+          wrong_attempted_students = StudentTest.where(id: (StudentAnswer.where(question_id: tq.id, question_type: "multiple_choice", result: false).select(:student_test_id)), test_id: params[:id].to_i).select(:user_id)
+
           wrong_attempted_students_answers = StudentAnswer.where(question_id: tq.id, result: false, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:answer)
           tq.wrong_attempted_students_and_answers = wrong_attempted_students.each_with_index.map  do |student,index|
             wrong_attempted_students_answers.each_with_index do |answer,index|
@@ -118,9 +139,13 @@ class TestsController < ApplicationController
           
         end
         if tq.question_type == "descriptive"
-          tq.attempted_students_count = StudentAnswer.where(question_id: tq.id, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).count
-          attempted_students =  StudentTest.where(id: StudentAnswer.where(question_id: tq.id, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:student_test_id)).select(:user_id)
-          attempted_answers = StudentAnswer.where(question_id: tq.id, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:answer)          
+          @answer = []
+          tq.attempted_students_count = StudentTest.where(id: (StudentAnswer.where(question_id: tq.id, question_type: "descriptive").select(:student_test_id)), test_id: params[:id].to_i).count
+            
+          attempted_students =   StudentTest.where(id: (StudentAnswer.where(question_id: tq.id, question_type: "descriptive").select(:student_test_id)), test_id: params[:id].to_i).select(:user_id)
+          
+          attempted_answers = StudentAnswer.where(question_type: "descriptive", question_id: tq.id, student_test_id: StudentTest.where(test_id: params[:id].to_i).select(:id)).select(:answer)
+
           tq.attempted_students_and_answers = attempted_students.each_with_index.map  do |student,index|
             attempted_answers.each_with_index do |answer,index|
               @answer[index] = answer.answer
@@ -128,7 +153,6 @@ class TestsController < ApplicationController
             {user_id: student.user_id, answer: @answer[index]}
           end
         end
-
       end
     end
     
