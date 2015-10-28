@@ -12,11 +12,15 @@ class TestsController < ApplicationController
 
   def search 
     @student_response = StudentAnswer.where(question_type: "descriptive", question_id: params[:question_id], student_test_id: StudentTest.where(test_id: params[:test_id].to_i, user_id: params[:student_id]))
-
+    
     if @student_response.present?
-      @student_response = "#{User.find(params[:student_id]).name} "+"Response :  "+" #{@student_response[0][:answer]}"
+      @student_response = "#{User.find(params[:student_id]).name} "+"Response :  "+" <b> #{@student_response[0][:answer]} </b>"
     else
-      @student_response ="#{User.find(params[:student_id]).name} "+" Didnt Attempted This Question"
+      if params[:student_id].present?
+        @student_response ="<b> #{User.find(params[:student_id]).name} </b>"+" Didnt Attempted This Question"
+      else
+        @student_response ="No Student With Name : "+" <b >#{params[:term]}</b>"
+      end
     end
 
     redirect_to "/tests/#{params[:test_id]}?page=#{params[:page]}&report=true", :notice => @student_response
